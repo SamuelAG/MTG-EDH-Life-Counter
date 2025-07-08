@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MTGEDHLifeCounterTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(modifier = Modifier.fillMaxSize()) {
                     LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
                    MainScreen()
                 }
@@ -67,19 +67,20 @@ fun LockScreenOrientation(orientation: Int) {
 }
 
 @Composable
-fun PlayerHP(hp: Int, modifier: Modifier = Modifier) {
-    var playerhp by remember { mutableStateOf(40) }
+fun PlayerHP(startigHp: Int, bgColor: Color, modifier: Modifier = Modifier) {
+    var playerhp by remember { mutableStateOf(startigHp) }
+    var color by remember { mutableStateOf(bgColor) }
     Row (
-        modifier = modifier,
+        modifier = modifier.background(color),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {
         TextButton(
-            onClick = { playerhp++
-                        if(playerhp == 0) {
-                            playerhp = 100
-                        }
-                      },
+            onClick = {
+                playerhp++
+                if(playerhp > 0)
+                    color = bgColor
+            },
             modifier = Modifier.weight(2f)
         ) {
             Icon(
@@ -99,7 +100,7 @@ fun PlayerHP(hp: Int, modifier: Modifier = Modifier) {
         TextButton(
             onClick = { playerhp--
                         if(playerhp == 0) {
-                            playerhp = 100
+                            color = Color.Gray
                         }
                       },
             modifier = Modifier.weight(2f)
@@ -117,6 +118,10 @@ fun PlayerHP(hp: Int, modifier: Modifier = Modifier) {
 
 @Composable
 fun MainScreen(modifier: Modifier = Modifier) {
+
+    var p1hp by remember { mutableStateOf(40) }
+    var p1color by remember { mutableStateOf(Color.Red) }
+
     Column (
         modifier
             .fillMaxSize()
@@ -130,18 +135,30 @@ fun MainScreen(modifier: Modifier = Modifier) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            PlayerHP(40, modifier.weight(0.5f)
-                .background(Color.Red).fillMaxSize())
-            PlayerHP(32, modifier.weight(0.5f)
-                .background(Color.Cyan).fillMaxSize())
+            PlayerHP(
+                startigHp = 20,
+                bgColor = p1color,
+                modifier = modifier.weight(0.5f).fillMaxSize()
+            )
+            PlayerHP(
+                startigHp = 20,
+                bgColor = Color.Cyan,
+                modifier = modifier.weight(0.5f).fillMaxSize()
+            )
         }
         Row (
             Modifier.weight(0.5f)
         ) {
-            PlayerHP(8, modifier.weight(0.5f)
-                .background(Color.Yellow).fillMaxSize())
-            PlayerHP(27, modifier.weight(0.5f)
-                .background(Color.Green).fillMaxSize())
+            PlayerHP(
+                startigHp = 20,
+                bgColor = Color.Yellow,
+                modifier = modifier.weight(0.5f).fillMaxSize()
+            )
+            PlayerHP(
+                startigHp = 20,
+                bgColor = Color.Green,
+                modifier = modifier.weight(0.5f).fillMaxSize()
+            )
         }
     }
 }
